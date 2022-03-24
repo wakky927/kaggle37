@@ -16,18 +16,24 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 ENV PATH /opt/miniconda3/bin:$PATH
 
 # setting environment
-COPY kaggle_venv.yaml .
+COPY venv.yaml .
 
 RUN pip install --upgrade pip && \
     conda update -n base -c defaults conda && \
-    conda env create -f kaggle_venv.yaml && \
+    conda env create -f venv.yaml && \
     conda init && \
-    echo "conda activate kaggle_venv" >> ~/.bashrc
+    echo "conda activate venv" >> ~/.bashrc
 
-ENV CONDA_DEFAULT_ENV kaggle_venv && \
-    PATH /opt/conda/envs/kaggle_venv/bin:$PATH
+ENV CONDA_DEFAULT_ENV venv && \
+    PATH /opt/conda/envs/venv/bin:$PATH
 
 # move modules directory
 WORKDIR /
+
+# git clone
+RUN git clone https://github.com/wakky927/kuzushi.git
+
+# move modules directory
+WORKDIR /kuzushi/
 
 CMD ["/bin/bash"]
